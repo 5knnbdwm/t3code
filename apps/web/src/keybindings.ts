@@ -344,15 +344,16 @@ export function isDiffToggleShortcut(
   return matchesCommandShortcut(event, keybindings, "diff.toggle", options);
 }
 
-export function isOpenFavoriteEditorShortcut(
+/** Commands that open a path in the preferred editor: the workspace, or the previewed file. */
+export type OpenInEditorCommand = "editor.openFavorite" | "editor.openFileInFavorite";
+
+export function isOpenInEditorShortcut(
   event: ShortcutEventLike,
   keybindings: ResolvedKeybindingsConfig,
+  command: OpenInEditorCommand,
   options?: ShortcutMatchOptions,
 ): boolean {
-  return (
-    event.repeat !== true &&
-    matchesCommandShortcut(event, keybindings, "editor.openFavorite", options)
-  );
+  return event.repeat !== true && matchesCommandShortcut(event, keybindings, command, options);
 }
 
 /**

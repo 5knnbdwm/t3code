@@ -2,7 +2,7 @@ import type { EditorId, EnvironmentId, ResolvedKeybindingsConfig } from "@t3tool
 import { useEffect } from "react";
 
 import { usePreferredEditor } from "../../editorPreferences";
-import { isOpenFavoriteEditorShortcut } from "../../keybindings";
+import { isOpenInEditorShortcut } from "../../keybindings";
 import { shellEnvironment } from "../../state/shell";
 import { useAtomCommand } from "../../state/use-atom-command";
 
@@ -26,7 +26,11 @@ export function useOpenFavoriteEditorShortcut({
     if (!enabled) return;
     const handler = (event: globalThis.KeyboardEvent) => {
       // A mounted OpenInPicker handles the shortcut first; never open twice.
-      if (event.defaultPrevented || !isOpenFavoriteEditorShortcut(event, keybindings)) return;
+      if (
+        event.defaultPrevented ||
+        !isOpenInEditorShortcut(event, keybindings, "editor.openFavorite")
+      )
+        return;
       if (!openInCwd || !preferredEditor) return;
 
       event.preventDefault();

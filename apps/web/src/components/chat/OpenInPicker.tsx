@@ -7,7 +7,11 @@ import {
   type ResolvedKeybindingsConfig,
 } from "@t3tools/contracts";
 import { memo, useCallback, useEffect, useMemo, useRef } from "react";
-import { isOpenFavoriteEditorShortcut, shortcutLabelForCommand } from "../../keybindings";
+import {
+  isOpenInEditorShortcut,
+  type OpenInEditorCommand,
+  shortcutLabelForCommand,
+} from "../../keybindings";
 import { usePreferredEditor } from "../../editorPreferences";
 import { editorLabelForPlatform } from "../../editorLabels";
 import {
@@ -211,6 +215,7 @@ export const OpenInPicker = memo(function OpenInPicker({
   presentation = "toolbar",
   compact = false,
   enableShortcut = true,
+  shortcutCommand = "editor.openFavorite",
   displayMode = "toolbar",
 }: {
   environmentId: EnvironmentId;
@@ -220,6 +225,8 @@ export const OpenInPicker = memo(function OpenInPicker({
   presentation?: "toolbar" | "menu";
   compact?: boolean;
   enableShortcut?: boolean;
+  /** Pickers for a path other than the workspace need their own command. */
+  shortcutCommand?: OpenInEditorCommand;
   displayMode?: "toolbar" | "panel";
 }) {
   const isPanel = displayMode === "panel";
@@ -289,14 +296,14 @@ export const OpenInPicker = memo(function OpenInPicker({
   );
 
   const openFavoriteEditorShortcutLabel = useMemo(
-    () => shortcutLabelForCommand(keybindings, "editor.openFavorite"),
-    [keybindings],
+    () => shortcutLabelForCommand(keybindings, shortcutCommand),
+    [keybindings, shortcutCommand],
   );
 
   useEffect(() => {
     if (!enableShortcut || !canOpenEditor) return;
     const handler = (e: globalThis.KeyboardEvent) => {
-      if (e.defaultPrevented || !isOpenFavoriteEditorShortcut(e, keybindings)) return;
+      if (e.defaultPrevented || !isOpenInEditorShortcut(e, keybindings, shortcutCommand)) return;
       if (!openInCwd) return;
       if (!preferredEditor) return;
       if (
@@ -321,6 +328,7 @@ export const OpenInPicker = memo(function OpenInPicker({
     openInEditor,
     preferredEditor,
     remote.mode,
+    shortcutCommand,
   ]);
   const primaryLabel = isPanel ? `Open in ${primaryOption?.label ?? "editor"}` : "Open";
 

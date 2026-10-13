@@ -18,7 +18,7 @@ import {
   isRichTextBoldShortcut,
   modelPickerJumpCommandForIndex,
   modelPickerJumpIndexFromCommand,
-  isOpenFavoriteEditorShortcut,
+  isOpenInEditorShortcut,
   isTerminalClearShortcut,
   isTerminalCloseShortcut,
   isTerminalNewShortcut,
@@ -158,6 +158,7 @@ const DEFAULT_BINDINGS = compile([
   { shortcut: modShortcut("o", { shiftKey: true }), command: "chat.new" },
   { shortcut: modShortcut("n", { shiftKey: true }), command: "chat.newLocal" },
   { shortcut: modShortcut("o"), command: "editor.openFavorite" },
+  { shortcut: modShortcut("o", { altKey: true }), command: "editor.openFileInFavorite" },
   { shortcut: modShortcut("[", { shiftKey: true }), command: "thread.previous" },
   { shortcut: modShortcut("]", { shiftKey: true }), command: "thread.next" },
   {
@@ -713,20 +714,49 @@ describe("chat/editor shortcuts", () => {
 
   it("matches editor.openFavorite shortcut", () => {
     assert.isTrue(
-      isOpenFavoriteEditorShortcut(event({ key: "o", metaKey: true }), DEFAULT_BINDINGS, {
-        platform: "MacIntel",
-      }),
+      isOpenInEditorShortcut(
+        event({ key: "o", metaKey: true }),
+        DEFAULT_BINDINGS,
+        "editor.openFavorite",
+        {
+          platform: "MacIntel",
+        },
+      ),
     );
     assert.isTrue(
-      isOpenFavoriteEditorShortcut(event({ key: "o", ctrlKey: true }), DEFAULT_BINDINGS, {
-        platform: "Linux",
-      }),
+      isOpenInEditorShortcut(
+        event({ key: "o", ctrlKey: true }),
+        DEFAULT_BINDINGS,
+        "editor.openFavorite",
+        {
+          platform: "Linux",
+        },
+      ),
     );
     assert.isFalse(
-      isOpenFavoriteEditorShortcut(
+      isOpenInEditorShortcut(
         event({ key: "o", metaKey: true, repeat: true }),
         DEFAULT_BINDINGS,
+        "editor.openFavorite",
         { platform: "MacIntel" },
+      ),
+    );
+  });
+
+  it("keeps the workspace and file open-in-editor shortcuts apart", () => {
+    // Option+O types "ø" on a Mac keyboard; the physical key still matches.
+    const fileChord = event({ key: "ø", code: "KeyO", metaKey: true, altKey: true });
+    const mac = { platform: "MacIntel" };
+    assert.isTrue(
+      isOpenInEditorShortcut(fileChord, DEFAULT_BINDINGS, "editor.openFileInFavorite", mac),
+    );
+    assert.isFalse(isOpenInEditorShortcut(fileChord, DEFAULT_BINDINGS, "editor.openFavorite", mac));
+    assert.isFalse(
+      isOpenInEditorShortcut(
+        event({ key: "o", metaKey: true }),
+        DEFAULT_BINDINGS,
+        "editor.openFileInFavorite",
+        mac,
       ),
     );
   });

@@ -50,7 +50,7 @@ vi.mock("../../remoteOpen", () => ({
   openRemoteEditorUrl: state.openUrl,
 }));
 vi.mock("../../keybindings", () => ({
-  isOpenFavoriteEditorShortcut: () => true,
+  isOpenInEditorShortcut: () => true,
   shortcutLabelForCommand: () => "Ctrl+O",
 }));
 vi.mock("../ui/button", () => ({ Button: "button" }));

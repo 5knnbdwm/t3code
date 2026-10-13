@@ -64,7 +64,6 @@ describe("ThreadDetailsPanel", () => {
       keybindings: [],
       availableEditors: [],
       showOpenInPicker: false,
-      openInShortcutEnabled: true,
       gitCwd,
       isGitRepo: false,
       envLocked: false,
