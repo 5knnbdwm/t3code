@@ -8451,6 +8451,9 @@ export default function ChatView(props: ChatViewProps) {
               keybindings={keybindings}
               availableEditors={availableEditors}
               showOpenInPicker={showOpenInPicker}
+              openInShortcutEnabled={
+                !(rightPanelOpen && renderedRightPanelSurface?.kind === "file")
+              }
               gitCwd={gitCwd}
               isGitRepo={isGitRepo}
               envLocked={envLocked}
