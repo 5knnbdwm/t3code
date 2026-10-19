@@ -650,7 +650,7 @@ describe("ProviderInstanceRegistry — multi-instance codex slice", () => {
         usageFailsAfterClaim: false,
       });
       expect(outcome).toMatchObject({ _tag: "Success", success: "reset" });
-      expect(after.usageLimits?.windows[0]?.usedPercent).toBe(0);
+      expect(after.usageLimits?.windows).toEqual([]);
     }),
   );
 
