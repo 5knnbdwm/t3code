@@ -8452,7 +8452,11 @@ export default function ChatView(props: ChatViewProps) {
               availableEditors={availableEditors}
               showOpenInPicker={showOpenInPicker}
               openInShortcutEnabled={
-                !(rightPanelOpen && renderedRightPanelSurface?.kind === "file")
+                !(
+                  rightPanelOpen &&
+                  renderedRightPanelSurface?.kind === "file" &&
+                  renderedRightPanelSurface.attachment === undefined
+                )
               }
               gitCwd={gitCwd}
               isGitRepo={isGitRepo}
