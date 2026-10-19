@@ -218,6 +218,21 @@ it.each(["local-exec", "remote-links"] as const)(
   },
 );
 
+it.each(["remote-links", "remote-unavailable"] as const)(
+  "does not launch an editor from the %s fallback when no picker is mounted",
+  async (mode) => {
+    state.allowed.add(selected);
+    state.remote =
+      mode === "remote-links" ? { mode, host: { kind: "ssh-alias", host: "test-host" } } : { mode };
+    await act(async () => root.render(<FavoriteEditorFallback />));
+
+    await pressOpenFavorite();
+
+    expect.soft(state.run).not.toHaveBeenCalled();
+    expect.soft(state.openUrl).not.toHaveBeenCalled();
+  },
+);
+
 it.each(["local-exec", "remote-links"] as const)(
   "selects the preferred editor without launching a %s workspace",
   async (mode) => {
