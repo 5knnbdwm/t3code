@@ -95,7 +95,7 @@ describe("claudeUsageResponseToLimits", () => {
     ).toEqual({ checkedAt, windows: [], unavailable: { reason: "unsupported" } });
   });
 
-  it("omits an unstarted session when the weekly allowance is exhausted", () => {
+  it("omits an unstarted session so an exhausted weekly allowance is the only row", () => {
     const { limits } = claudeUsageResponseToLimits({
       checkedAt,
       response: {
